@@ -11,13 +11,17 @@ namespace TuringMachine_RajathAradhya
         private readonly List<string> K = new List<string>();    /*!< finite set of states */
         private readonly List<char> Sigma = new List<char>();    /*!< input alphabets  */
         private readonly List<Transitions> deltA = new List<Transitions>();  /*!< trasition function */
+        List<char> TapeChars = new List<char>(); /*!< tape charectors */
         private string S;                                        /*!< start state */
         private readonly List<string> A = new List<string>();    /*!< accepting states */
+        private List<string> tape = new List<string>();
+        public List<List<string>> multiTapes = new List<List<string>>();
         /*! \brief Constructor */
-        public Turing(List<string> k, List<char> sigma, List<Transitions> delta, string s, List<string> a)
+        public Turing(List<string> k, List<char> sigma,List<char> tapeChars, List<Transitions> delta, string s, List<string> a)
         {
             K = k.ToList();
             Sigma = sigma.ToList();
+            TapeChars = tapeChars;
             AddDelta(delta);
             AddInitialState(s);
             Acceptingstates(a);
@@ -55,6 +59,16 @@ namespace TuringMachine_RajathAradhya
             foreach (string acceptState in acceptingstates.Where(finalState => K.Contains(finalState)))
             {
                 A.Add(acceptState); /*!< setting accepting state */
+            }
+        }
+
+        public void inputCheck(string inputs, int threshold, int numOfTapes)
+        {
+            tape = inputs.Split(',').ToList<string>();
+            multiTapes.Add(tape);
+            for(int i = 0; i<numOfTapes;i++)
+            {
+                multiTapes.Add((" , ").Split(',').ToList<string>());
             }
         }
     }
