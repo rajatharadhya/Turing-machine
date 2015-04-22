@@ -64,7 +64,7 @@ namespace TuringMachine_RajathAradhya
                 Console.WriteLine("Input --> " + inputs);
                 tur.inputCheck(inputs, threshold, numOfTapes);
             }
-            Console.ReadLine();
+            Console.Read();
         }
     }
 }
