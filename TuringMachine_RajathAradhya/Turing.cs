@@ -31,11 +31,30 @@ namespace TuringMachine_RajathAradhya
 
         public void inputCheck(string inputs, int threshold, int numOfTapes)
         {
+            int inputNumber = 0;
+            List<string> inputSplit = new List<string>();
+            List<int> headers = new List<int>(); 
             string currentState = S;
             tape = inputs.Split(',').ToList<string>();
+            inputSplit = inputs.Split(' ').ToList<string>();
+            inputSplit.RemoveAt(0);
+            inputSplit.RemoveAt(inputSplit.Count - 1);
+            List<int> inputStartHeaders = new List<int>();
+            for (int u = 1; u < (tape.Count-1); u++)
+            {
+                if (tape[u] == " ")
+                {
+                    inputStartHeaders.Add(u+1);
+                }
+            }
             for (int i = 1; i < numOfTapes; i++)
             {
                 multiTapes.Add((" ,").Split(',').ToList<string>());
+            }
+
+            for (int i = 1; i < numOfTapes; i++)
+            {
+                headers.Add(1);
             }
             bool halt = true;
             int j = 1;
@@ -48,39 +67,72 @@ namespace TuringMachine_RajathAradhya
                     writer.WriteLine("");
                     writer.WriteLine("current state = " + currentState + " current alphabet = " + tape[j] + " iteration Count =" + iterationCount);
                     iterationCount++;
-                    if (tape[j] == null || tape[j] == " " || (iterationCount - 1) == threshold || A.Contains(currentState))
+                    if ((iterationCount - 1) == threshold || A.Contains(currentState))
                     {
+                        Console.WriteLine("Input --> " + inputSplit[inputNumber]);
                         if (A.Contains(currentState))
                             Console.WriteLine(" Input Accepted");
                         else
                             Console.WriteLine(" Input Rejected");
                         printing(writer);
+                        if (inputNumber < (inputSplit.Count-1))
+                        {
+                            writer.Write("");
+                            writer.Write("-----------------Next input-------------------");
+                            writer.Write("");
+                            j = inputStartHeaders[inputNumber];
+                            inputNumber++;
+                            currentState = S;
+                            continue;
+                        }
+                        else
                         halt = false;
                         continue;
                     }
                     Transitions transit = deltA.Find(t => t.StartState == currentState && t.InputSymbol == Convert.ToChar(tape[j]));
                     if (transit == null)
                     {
-                        Console.WriteLine(" Input Rejected");
+                        Console.WriteLine("Input --> " + inputSplit[inputNumber]);
+                        if (A.Contains(currentState))
+                            Console.WriteLine(" Input Accepted");
+                        else
+                            Console.WriteLine(" Input Rejected");
                         printing(writer);
+                        if (inputNumber < (inputSplit.Count - 1))
+                        {
+                            writer.Write("");
+                            writer.Write("-----------------Next input-------------------");
+                            writer.Write("");
+                            j = inputStartHeaders[inputNumber];
+                            inputNumber++;
+                            currentState = S;
+                            continue;
+                        }
+                        else
                         halt = false;
                         continue;
                     }
                     currentState = transit.EndState;
                     tape[j] = transit.WriteSymbol.ToString();
-                    int k = 0;
-                    List<string> alphas = transit.InputsNtapes;
+                    Dictionary<string, string> alphas = transit.InputsNtapes;
+                    int count = 0;
                     foreach (List<string> taps in multiTapes)
                     {
+                        var item = alphas.ElementAt(count);
+                        
                         try
                         {
-                            taps[j] = alphas[k];
+                            taps[headers[count]] = item.Key;
                         }
                         catch
                         {
-                            taps.Add(alphas[k]);
+                            taps.Add(item.Key);
                         }
-                        k++;
+                        if (item.Value == "r")
+                            headers[count]++;
+                        else if (item.Value == "l")
+                            headers[count]--;
+                        count++;
                     }
                     printing(writer);
                     if (transit.Direction == 'r')

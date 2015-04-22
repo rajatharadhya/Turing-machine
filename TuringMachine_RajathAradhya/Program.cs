@@ -37,7 +37,7 @@ namespace TuringMachine_RajathAradhya
             A = line[4].Split(',').ToList<string>();
             while ((readingline = machineReader.ReadLine()) != null)
             {
-                List<string> InputsNtapes = new List<string>();
+                Dictionary<string, string> InputsNtapes = new Dictionary<string, string>();
                 line = readingline.Split(',');
                 if(numOfTapes < 1 )
                 {
@@ -47,9 +47,10 @@ namespace TuringMachine_RajathAradhya
                 }
                 if (numOfTapes > 1)
                 {
-                    for (int i = 5; i < (4 + numOfTapes); i++)
+                    for (int i = 5; i < (3 + (numOfTapes*2)); i++)
                     {
-                        InputsNtapes.Add(line[i]);
+                        InputsNtapes.Add(line[i],line[i+1]);
+                        i++;
                     }
                 }
 
@@ -61,7 +62,7 @@ namespace TuringMachine_RajathAradhya
             StreamReader inputReader = new StreamReader("input.txt");
             if ((inputs = inputReader.ReadLine()) != null)
             {
-                Console.WriteLine("Input --> " + inputs);
+                
                 tur.inputCheck(inputs, threshold, numOfTapes);
             }
             Console.Read();

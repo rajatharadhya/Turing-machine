@@ -13,8 +13,8 @@ namespace TuringMachine_RajathAradhya
         public string EndState { get; private set; } /*!< End states. */
         public char WriteSymbol { get; private set; } /*!< symbol to be written on to tape */
         public char Direction { get; private set; } /*!< direction tape moves */
-        public List<string> InputsNtapes { get; private set; }
-        public Transitions(string startState, char inputSymbol, string endState, char writeSymbol, char direction, List<string> inputsNtapes)
+        public Dictionary<string, string> InputsNtapes = new Dictionary<string, string>();
+        public Transitions(string startState, char inputSymbol, string endState, char writeSymbol, char direction, Dictionary<string, string> inputsNtapes)
        {
            StartState = startState;  /*!< Start state. */
            InputSymbol = inputSymbol; /*!< each input symbols */
